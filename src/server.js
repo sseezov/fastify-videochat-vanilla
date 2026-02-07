@@ -1,6 +1,7 @@
 import Fastify from 'fastify'
 import fastifyStatic from '@fastify/static';
 import path from 'node:path'
+import { v4 as uuidv4 } from 'uuid';
 
 const __dirname = import.meta.dirname;
 
@@ -16,11 +17,10 @@ fastify.get('/', (request, reply) => {
   reply.sendFile('index.html');
 });
 
-// fastify.get('/apiv1/teachers', (req, reply) => {
-//   reply.send(teachers)
-// })
+fastify.get('/:room', (request, reply) => {
+  reply.sendFile('index.html');
+});
 
-// Run the server!
 try {
   await fastify.listen({ port: 3000 })
 } catch (err) {
