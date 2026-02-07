@@ -19,14 +19,13 @@ fastify.register(fastifyView, {
 
 fastify.get('/', (request, reply) => {
   // Renders the 'home.pug' file located in the 'views' directory
-  reply.view('home.pug', { 
-    name: 'World',
-    title: 'Fastify Pug Example'
-  });
+  reply.redirect(`/${uuidv4()}`)
 });
 
 fastify.get('/:room', (request, reply) => {
-  reply.sendFile('index.html');
+  reply.view('room.pug', {
+    roomId: request.params.room
+  })
 });
 
 try {
