@@ -18,7 +18,6 @@ fastify.register(fastifyView, {
 });
 
 fastify.get('/', (request, reply) => {
-  // Renders the 'home.pug' file located in the 'views' directory
   reply.redirect(`/${uuidv4()}`)
 });
 
