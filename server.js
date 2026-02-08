@@ -9,7 +9,7 @@ import ejs from 'ejs'
 const __dirname = import.meta.dirname;
 
 const fastify = Fastify({
-  logger: true
+  // logger: true
 })
 
 fastify.register(fastifyView, {
@@ -40,12 +40,8 @@ try {
     host: '0.0.0.0'
   });
   
-  const io = new Server(fastify.server, {
-    cors: {
-      origin: "*",
-      methods: ["GET", "POST"]
-    }
-  });
+  const io = new Server(fastify.server);
+  console.log(`server is listening on http://localhost:3000`);
 
   io.on('connection', (socket) => {
     console.log('Пользователь подключился:', socket.id);
@@ -54,8 +50,6 @@ try {
       console.log(`Пользователь ${socket.id} присоединился к комнате ${roomId}`);
     })
   });
-
-  console.log('Socket.IO подключен');
   
 } catch (err) {
   fastify.log.error(err)
