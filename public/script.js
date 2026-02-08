@@ -1,3 +1,5 @@
+const socket = io('/')
+
 const userVideoElement = document.createElement('video')
 userVideoElement.muted = true;
 
@@ -18,3 +20,7 @@ const mountVideoStream = (htmlVideoElement, stream) => {
     htmlVideoElement.play()
   })
 }
+
+socket.on('user-connected', userId => {
+  connectToNewUser(userId, stream)
+})
