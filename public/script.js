@@ -1,3 +1,5 @@
+const peer = new Peer("pick-an-id");
+
 const socket = io('/')
 
 const userVideoElement = document.createElement('video')
@@ -20,7 +22,12 @@ const mountVideoStream = (htmlVideoElement, stream) => {
     htmlVideoElement.play()
   })
 }
+socket.emit('join-room', ROOM_ID)
 
 socket.on('user-connected', userId => {
-  connectToNewUser(userId, stream)
+  connectToNewUser()
 })
+
+const connectToNewUser = (userId, stream) => {
+  console.log('new user');
+}

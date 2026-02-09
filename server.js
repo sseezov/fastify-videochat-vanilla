@@ -5,6 +5,7 @@ import { v4 as uuidv4 } from 'uuid';
 import { Server } from 'socket.io';
 import fastifyStatic from '@fastify/static';
 import ejs from 'ejs'
+import { PeerServer } from 'peer';
 
 const __dirname = import.meta.dirname;
 
@@ -34,6 +35,12 @@ fastify.get('/:room', (request, reply) => {
   })
 });
 
+const peerServer = PeerServer({
+  port: 9000,
+  path: '/peerjs',
+  allow_discovery: true
+})
+
 try {
   await fastify.listen({ 
     port: 3000,
@@ -42,12 +49,14 @@ try {
   
   const io = new Server(fastify.server);
   console.log(`server is listening on http://localhost:3000`);
+  console.log('PeerJS: http://localhost:9000/peerjs')
 
-  io.on('connection', (socket) => {
-    console.log('Пользователь подключился:', socket.id);
-    
+  io.on('connection', (socket) => {    
     socket.on('join-room', (roomId) => {
+
       console.log(`Пользователь ${socket.id} присоединился к комнате ${roomId}`);
+      socket.join(roomId)
+      socket.to(roomId).emit('user-connected')
     })
   });
   
