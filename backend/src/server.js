@@ -1,10 +1,8 @@
 import Fastify from 'fastify'
-import fastifyView from '@fastify/view';
 import path from 'node:path'
 import { v4 as uuidv4 } from 'uuid';
 import { Server } from 'socket.io';
 import fastifyStatic from '@fastify/static';
-import ejs from 'ejs'
 import { PeerServer } from 'peer';
 
 const __dirname = import.meta.dirname;
@@ -13,26 +11,17 @@ const fastify = Fastify({
   // logger: true
 })
 
-fastify.register(fastifyView, {
-  engine: {
-    ejs
-  },
-  root: path.join(__dirname, 'views')
+fastify.register(fastifyStatic, {
+  root: path.join(__dirname, '../public'),
 });
 
-await fastify.register(fastifyStatic, {
-  root: path.join(__dirname, 'public'),
-  prefix: '/public/'
-})
 
 fastify.get('/', (request, reply) => {
-  reply.redirect(`/${uuidv4()}`)
+  reply.redirect(`/${uuidv4()}`)  
 });
 
 fastify.get('/:room', (request, reply) => {
-  reply.view('room.ejs', {
-    roomId: request.params.room
-  })
+  reply.sendFile('index.html');
 });
 
 const peerServer = PeerServer({

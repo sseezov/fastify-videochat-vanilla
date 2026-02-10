@@ -1,3 +1,6 @@
+import { io } from "socket.io-client";
+import Peer from 'peerjs'
+
 const peer = new Peer("pick-an-id");
 
 const socket = io('/')
