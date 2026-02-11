@@ -41,11 +41,11 @@ try {
   console.log('PeerJS: http://localhost:9000/peerjs')
 
   io.on('connection', (socket) => {    
-    socket.on('join-room', (roomId) => {
+    socket.on('join-room', (roomId, userId) => {
 
       console.log(`Пользователь ${socket.id} присоединился к комнате ${roomId}`);
       socket.join(roomId)
-      socket.to(roomId).emit('user-connected')
+      socket.to(roomId).emit('user-connected', userId)
     })
   });
   

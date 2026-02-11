@@ -4,7 +4,11 @@ import Peer from 'peerjs'
 const url = new URL(window.location.href);
 const ROOM_ID = url.pathname.slice(1)
 
-const peer = new Peer("pick-an-id");
+const peer = new Peer(undefined,{
+  path: '/peerjs',
+  host: '/',
+  port: 9000
+});
 
 const socket = io('/')
 
@@ -29,12 +33,15 @@ const mountVideoStream = (htmlVideoElement, stream) => {
   })
 }
 
-socket.emit('join-room', ROOM_ID)
+peer.on('open', (id) => {
+  console.log('open', id);
+  socket.emit('join-room', ROOM_ID, id)
+})
 
-socket.on('user-connected', userId => {
-  connectToNewUser()
+socket.on('user-connected', (userId) => {
+  connectToNewUser(userId)
 })
 
 const connectToNewUser = (userId, stream) => {
-  console.log('new user');
+  console.log('connect', userId);
 }
