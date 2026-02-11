@@ -1,6 +1,9 @@
 import { io } from "socket.io-client";
 import Peer from 'peerjs'
 
+const url = new URL(window.location.href);
+const ROOM_ID = url.pathname.slice(1)
+
 const peer = new Peer("pick-an-id");
 
 const socket = io('/')
@@ -25,6 +28,7 @@ const mountVideoStream = (htmlVideoElement, stream) => {
     htmlVideoElement.play()
   })
 }
+
 socket.emit('join-room', ROOM_ID)
 
 socket.on('user-connected', userId => {
