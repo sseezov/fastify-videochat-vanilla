@@ -3,11 +3,8 @@ import { defineConfig } from 'vite';
 export default defineConfig({
   server: {
     proxy: {
-      '/apiv1': {
-        target: 'http://localhost:3000', // The address of your backend server
-        changeOrigin: true, // Needed for virtual hosted sites
-        secure: false, // Set to true if the backend uses HTTPS with a valid certificate
-      },
+      '/socket.io': 'http://localhost:3000', // прокси для сокетов
+      '/peerjs': 'http://localhost:9000'      // прокси для peerjs
     },
   },
 });

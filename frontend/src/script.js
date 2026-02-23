@@ -1,12 +1,14 @@
 import { io } from "socket.io-client";
 import Peer from 'peerjs'
-import { PEER_CONFIG, SOCKET_URL } from "./config.js";
+import { PEER_CONFIG } from "./config.js";
 import { ROOM_ID } from "./config.js";
 import { mountVideoStream, removeVideo } from "./helpers/DOMhelpers.js";
 import { connectToNewUser, disonnectUser } from "./services/socket-service.js";
 
 const peer = new Peer(undefined, PEER_CONFIG);
-const socket = io(SOCKET_URL);
+
+const socket = io();
+
 const userVideoElement = document.createElement('video');
 let videoStream;
 const peers = {};
