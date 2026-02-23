@@ -2,15 +2,13 @@ import { io } from "socket.io-client";
 import Peer from 'peerjs'
 import { PEER_CONFIG, SOCKET_URL } from "./config.js";
 import { ROOM_ID } from "./config.js";
+import { mountVideoStream, removeVideo } from "./DOMhelpers.js";
 
 const peer = new Peer(undefined, PEER_CONFIG);
 
 const socket = io(SOCKET_URL);
 
 const userVideoElement = document.createElement('video');
-
-userVideoElement.defaultMuted = true;
-userVideoElement.muted = true;
 
 let videoStream;
 const peers = {}; // активные соединения
@@ -21,7 +19,7 @@ navigator.mediaDevices.getUserMedia({
   audio: true
 }).then((stream) => {
   videoStream = stream;
-  mountVideoStream(userVideoElement, stream);
+  mountVideoStream(mountedVideos, userVideoElement, stream);
 }).catch(err => {
   console.error('Failed to get media devices:', err);
 });
@@ -63,7 +61,7 @@ peer.on('call', (call) => {
     // Проверяем, не показываем ли уже видео этого пользователя
     if (!mountedVideos.has(call.peer)) {
       const video = document.createElement('video');
-      mountVideoStream(video, remoteStream, call.peer);
+      mountVideoStream(mountedVideos, video, remoteStream, call.peer);
     }
   });
 
@@ -86,7 +84,7 @@ socket.on('user-connected', (userId) => {
 
 socket.on('user-disconnected', (userId) => {
   console.log('👋 User disconnected:', userId);
-  removeVideo(userId);
+  removeVideo(mountedVideos, userId);
   if (peers[userId]) {
     peers[userId].close();
     delete peers[userId];
@@ -124,7 +122,7 @@ const connectToNewUser = (userId) => {
       // Проверяем, не показываем ли уже видео этого пользователя
       if (!mountedVideos.has(userId)) {
         const video = document.createElement('video');
-        mountVideoStream(video, remoteStream, userId);
+        mountVideoStream(mountedVideos, video, remoteStream, userId);
       }
     });
 
@@ -141,44 +139,6 @@ const connectToNewUser = (userId) => {
     console.error('Error creating call:', err);
   }
 };
-
-const mountVideoStream = (htmlVideoElement, stream, userId) => {
-  // Если это не локальное видео и уже показываем - не дублируем
-  if (userId !== 'local' && mountedVideos.has(userId)) {
-    console.log('Video for', userId, 'already mounted');
-    return;
-  }
-
-  htmlVideoElement.srcObject = stream;
-
-  htmlVideoElement.addEventListener('loadedmetadata', () => {
-    htmlVideoElement.play().catch(e => console.log('Play error:', e));
-  });
-
-  // Добавляем data-атрибут для идентификации
-  htmlVideoElement.setAttribute('data-user-id', userId);
-
-  document.getElementById('video-grid').append(htmlVideoElement);
-
-  // Запоминаем, что видео этого пользователя уже показано
-  if (userId !== 'local') {
-    mountedVideos.add(userId);
-  }
-
-  console.log('Mounted video for', userId, 'Total videos:', mountedVideos.size + 1);
-}
-
-// Функция для удаления видео
-const removeVideo = (userId) => {
-  console.log('remove video');
-  const videoToRemove = document.querySelector(`video[data-user-id="${userId}"]`);
-  console.log(11111, videoToRemove);
-  if (videoToRemove) {
-    videoToRemove.remove();
-    mountedVideos.delete(userId);
-    console.log('Removed video for', userId);
-  }
-}
 
 socket.on('connect', () => {
   console.log('✅ Socket connected');
