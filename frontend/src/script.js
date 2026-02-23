@@ -2,17 +2,15 @@ import { io } from "socket.io-client";
 import Peer from 'peerjs'
 import { PEER_CONFIG, SOCKET_URL } from "./config.js";
 import { ROOM_ID } from "./config.js";
-import { mountVideoStream, removeVideo } from "./DOMhelpers.js";
+import { mountVideoStream, removeVideo } from "./helpers/DOMhelpers.js";
+import { connectToNewUser, disonnectUser } from "./services/socket-service.js";
 
 const peer = new Peer(undefined, PEER_CONFIG);
-
 const socket = io(SOCKET_URL);
-
 const userVideoElement = document.createElement('video');
-
 let videoStream;
-const peers = {}; // активные соединения
-const mountedVideos = new Set(); // ОТСЛЕЖИВАЕМ какие видео уже показаны
+const peers = {};
+const mountedVideos = new Set();
 
 navigator.mediaDevices.getUserMedia({
   video: true,
@@ -77,77 +75,6 @@ peer.on('call', (call) => {
   peers[call.peer] = call;
 });
 
-socket.on('user-connected', (userId) => {
-  console.log('👤 User connected:', userId);
-  connectToNewUser(userId);
-});
-
-socket.on('user-disconnected', (userId) => {
-  console.log('👋 User disconnected:', userId);
-  removeVideo(mountedVideos, userId);
-  if (peers[userId]) {
-    peers[userId].close();
-    delete peers[userId];
-  }
-});
-
-const connectToNewUser = (userId) => {
-  console.log('🔌 Connecting to:', userId);
-
-  // Не подключаемся к себе
-  if (userId === peer.id) {
-    console.log('That\'s me, skipping');
-    return;
-  }
-
-  // Проверяем, не подключены ли уже
-  if (peers[userId]) {
-    console.log('Already connected to', userId);
-    return;
-  }
-
-  try {
-    const call = peer.call(userId, videoStream);
-
-    if (!call) {
-      console.error('Failed to create call');
-      return;
-    }
-
-    peers[userId] = call;
-
-    call.on('stream', (remoteStream) => {
-      console.log('✅ Connected to', userId, '- stream received');
-
-      // Проверяем, не показываем ли уже видео этого пользователя
-      if (!mountedVideos.has(userId)) {
-        const video = document.createElement('video');
-        mountVideoStream(mountedVideos, video, remoteStream, userId);
-      }
-    });
-
-    call.on('close', () => {
-      console.log('Connection closed:', userId);
-      delete peers[userId];
-    });
-
-    call.on('error', (err) => {
-      console.error('Call error with', userId, ':', err);
-    });
-
-  } catch (err) {
-    console.error('Error creating call:', err);
-  }
-};
-
-socket.on('connect', () => {
-  console.log('✅ Socket connected');
-});
-
-socket.on('connect_error', (err) => {
-  console.error('Socket connection error:', err);
-});
-
 peer.on('error', (err) => {
   console.error('Peer error:', err);
 });
@@ -156,3 +83,6 @@ peer.on('disconnected', () => {
   console.log('Peer disconnected, reconnecting...');
   peer.reconnect();
 });
+socket.on('user-connected', (userId) => connectToNewUser(peers, peer, userId, videoStream, mountedVideos)); 
+socket.on('user-disconnected', (userId) => disonnectUser(peers, mountedVideos, userId));
+socket.on('connect_error', (err) => console.error('Socket connection error:', err));
