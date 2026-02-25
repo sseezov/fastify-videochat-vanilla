@@ -11,8 +11,7 @@ export const connectToNewUser = (peers, peer, userId, videoStream, mountedVideos
 
     call.on('stream', (remoteStream) => {
       if (!mountedVideos.has(userId)) {
-        const video = document.createElement('video');
-        mountVideoStream(mountedVideos, video, remoteStream, userId);
+        mountVideoStream(mountedVideos, remoteStream, userId);
       }
     });
 

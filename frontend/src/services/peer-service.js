@@ -37,8 +37,7 @@ export const handleCall = (call, getVideoStream, peers, mountedVideos) => {
 
     // Проверяем, не показываем ли уже видео этого пользователя
     if (!mountedVideos.has(call.peer)) {
-      const video = document.createElement('video');
-      mountVideoStream(mountedVideos, video, remoteStream, call.peer);
+      mountVideoStream(mountedVideos, remoteStream, call.peer);
     }
   });
 

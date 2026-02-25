@@ -15,7 +15,6 @@ fastify.register(fastifyStatic, {
   root: path.join(__dirname, '../public'),
 });
 
-
 fastify.get('/', (request, reply) => {
   reply.redirect(`/${uuidv4()}`)
 });

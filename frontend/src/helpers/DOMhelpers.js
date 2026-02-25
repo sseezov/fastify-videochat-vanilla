@@ -1,11 +1,13 @@
-export const mountVideoStream = (mountedVideos, htmlVideoElement, stream, userId) => {
-  htmlVideoElement.srcObject = stream;
-  htmlVideoElement.setAttribute('data-user-id', userId);
-  htmlVideoElement.addEventListener('loadedmetadata', () => {
-    htmlVideoElement.play().catch(e => console.log('Play error:', e));
+export const mountVideoStream = (mountedVideos, stream, userId) => {
+  const userVideoElement = document.createElement('video');
+
+  userVideoElement.srcObject = stream;
+  userVideoElement.setAttribute('data-user-id', userId);
+  userVideoElement.addEventListener('loadedmetadata', () => {
+    userVideoElement.play().catch(e => console.log('Play error:', e));
   });
 
-  document.getElementById('video-grid').append(htmlVideoElement);
+  document.getElementById('video-grid').append(userVideoElement);
 
   if (userId !== 'local') {
     mountedVideos.add(userId);

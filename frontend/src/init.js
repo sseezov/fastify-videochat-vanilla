@@ -9,7 +9,6 @@ import { handleCall, handleOpen } from "./services/peer-service.js";
 const peer = new Peer(undefined, PEER_CONFIG);
 const socket = io();
 
-const userVideoElement = document.createElement('video');
 let videoStream;
 const peers = {};
 const mountedVideos = new Set();
@@ -19,7 +18,7 @@ navigator.mediaDevices.getUserMedia({
   audio: true
 }).then((stream) => {
   videoStream = stream;
-  mountVideoStream(mountedVideos, userVideoElement, stream);
+  mountVideoStream(mountedVideos, stream);
 }).catch(err => {
   console.error('Failed to get media devices:', err);
   document.body.innerHTML = '<div>Нужен доступ к камере и микрофону</div>';
