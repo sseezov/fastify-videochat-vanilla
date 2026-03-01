@@ -1,4 +1,4 @@
-import { mountVideoStream } from "../helpers/DOMhelpers";
+import { mountVideoStream } from "../helpers/DOMhelpers.js";
 
 export const handleOpen = (id, getVideoStream, socket, ROOM_ID) => {
   console.log('✅ Peer open with ID:', id);
@@ -21,12 +21,6 @@ export const handleCall = (call, getVideoStream, peers, mountedVideos) => {
 
   if (!videoStream) {
     console.error('No local stream yet');
-    return;
-  }
-
-  // Проверяем, не подключены ли уже к этому пользователю
-  if (peers[call.peer]) {
-    console.log('Already connected to', call.peer);
     return;
   }
 
