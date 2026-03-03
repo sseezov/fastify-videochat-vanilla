@@ -10,5 +10,27 @@
 </head>
 
 <body>
-  <div id="video-grid"></div>
+  <div class="main">
+    <div class="main__videos">
+      <div id="video-grid"></div>
+
+    </div>
+    <div class="main__controls">
+      <button id="mute-btn">🔇 Отключить звук</button>
+      <button id="video-btn">📹 Отключить видео</button>
+      <button id="screen-btn">🖥️ Демонстрация</button>
+      <button id="leave-btn" class="danger">📞 Покинуть</button>
+    </div>
+
+    <div class="main__chat">
+      <div class="chat__messages" id="chat-messages">
+        <!-- сообщения будут здесь -->
+      </div>
+      <div class="chat__input">
+        <input type="text" id="chat-input" placeholder="Введите сообщение...">
+        <button id="chat-send">Отправить</button>
+      </div>
+
+    </div>
+  </div>
 </body>

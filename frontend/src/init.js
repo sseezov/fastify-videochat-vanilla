@@ -15,7 +15,7 @@ const mountedVideos = new Set();
 
 navigator.mediaDevices.getUserMedia({
   video: true,
-  audio: true
+  audio: false
 }).then((stream) => {
   videoStream = stream;
   mountVideoStream(mountedVideos, stream);
