@@ -22,3 +22,15 @@ export const removeVideo = (mountedVideos, userId) => {
     mountedVideos.delete(userId);
   }
 }
+
+export const initControls = (stream) => {
+  const videoBtn = document.querySelector('#video-btn')
+  const audioBtn = document.querySelector('#audio-btn')
+
+  videoBtn.addEventListener('click', ()=>{
+    stream.getVideoTracks()[0].enabled = !stream.getVideoTracks()[0].enabled;
+  })
+  audioBtn.addEventListener('click', ()=>{
+    stream.getAudioTracks()[0].enabled = !stream.getAudioTracks()[0].enabled;
+  })
+}
