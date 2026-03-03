@@ -45,7 +45,12 @@ try {
       console.log(`Пользователь ${socket.id} присоединился к комнате ${roomId}`);
       socket.join(roomId)
       socket.to(roomId).emit('user-connected', userId)
-      
+
+      socket.on('message', (msg) => {
+        console.log(11, msg);
+        io.to(roomId).emit('create-message', msg)
+      })
+
       socket.on('disconnect', () => {
         socket.to(roomId).emit('user-disconnected', userId);
       });

@@ -26,11 +26,29 @@ export const removeVideo = (mountedVideos, userId) => {
 export const initControls = (stream) => {
   const videoBtn = document.querySelector('#video-btn')
   const audioBtn = document.querySelector('#audio-btn')
+  // отключаем звук и картинку по умолчанию
+  stream.getVideoTracks()[0].enabled = false;
+  stream.getAudioTracks()[0].enabled = false;
 
-  videoBtn.addEventListener('click', ()=>{
+  videoBtn.addEventListener('click', () => {
     stream.getVideoTracks()[0].enabled = !stream.getVideoTracks()[0].enabled;
   })
-  audioBtn.addEventListener('click', ()=>{
+  audioBtn.addEventListener('click', () => {
     stream.getAudioTracks()[0].enabled = !stream.getAudioTracks()[0].enabled;
+  })
+}
+
+export const initChat = (socket) => {
+  const input = document.querySelector('#chat-input');
+  const form = document.querySelector('.chat__input')
+
+  form.addEventListener('submit', (e) => {
+    e.preventDefault()
+    const { value } = input;
+    if (value.length > 0) {
+      socket.emit('message', value);
+      form.reset();
+      input.focus()
+    }
   })
 }
