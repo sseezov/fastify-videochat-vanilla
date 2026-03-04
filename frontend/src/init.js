@@ -2,9 +2,10 @@ import { io } from "socket.io-client";
 import Peer from 'peerjs'
 import { PEER_CONFIG } from "./config.js";
 import { ROOM_ID } from "./config.js";
-import { initChat, initControls, mountVideoStream } from "./helpers/DOMhelpers.js";
+import { initControls, mountVideoStream } from "./helpers/video-helpers.js";
 import { connectToNewUser, disonnectUser } from "./services/socket-service.js";
 import { handleCall, handleOpen } from "./services/peer-service.js";
+import { addMessageToChat, initChat } from "./helpers/chat-helpers.js";
 
 const peer = new Peer(undefined, PEER_CONFIG);
 const socket = io();
@@ -37,5 +38,5 @@ peer.on('disconnected', () => {
 
 socket.on('user-connected', (userId) => connectToNewUser(peers, peer, userId, videoStream, mountedVideos));
 socket.on('user-disconnected', (userId) => disonnectUser(peers, mountedVideos, userId));
-socket.on('create-message', (msg)=>console.log(`the msg is ${msg}`))
+socket.on('create-message', (msg)=> addMessageToChat(msg))
 socket.on('connect_error', (err) => console.error('Socket connection error:', err));
