@@ -156,3 +156,18 @@ body {
 .chat__input button:hover {
   background: #3498db;
 }
+
+#audio-btn.disabled, #video-btn.disabled {
+  position: relative;
+}
+
+#audio-btn.disabled::after, #video-btn.disabled::after {
+  content: '';
+  position: absolute;
+  left: 15%;
+  top: 50%;
+  width: 30px;
+  height: 3px;
+  background: #e74c3c;
+  transform: rotate(-45deg) translateY(-50%);
+}

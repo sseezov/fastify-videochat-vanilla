@@ -5,10 +5,32 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Document</title>
-  <script type="module" crossorigin src="/assets/index-DrUUogj6.js"></script>
-  <link rel="stylesheet" crossorigin href="/assets/index-HEDCzOTK.css">
+  <script type="module" crossorigin src="/assets/index-e1fPaYKV.js"></script>
+  <link rel="stylesheet" crossorigin href="/assets/index-jWTG1Wtq.css">
 </head>
 
 <body>
-  <div id="video-grid"></div>
+  <div class="main">
+    <div class="main__videos">
+      <div id="video-grid"></div>
+
+    </div>
+    <div class="main__controls">
+      <button id="audio-btn">🔇 Звук</button>
+      <button id="video-btn">📹 Видео</button>
+      <button id="screen-btn">🖥️ Демонстрация</button>
+      <button id="leave-btn" class="danger">📞 Покинуть</button>
+    </div>
+
+    <div class="main__chat">
+      <div class="chat__messages" id="chat-messages">
+        <!-- сообщения будут здесь -->
+      </div>
+      <form class="chat__input">
+        <input type="text" id="chat-input" placeholder="Введите сообщение...">
+        <button type="submit" id="chat-send">Отправить</button>
+      </form>
+
+    </div>
+  </div>
 </body>

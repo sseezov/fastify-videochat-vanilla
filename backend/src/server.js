@@ -47,7 +47,7 @@ try {
       socket.to(roomId).emit('user-connected', userId)
 
       socket.on('message', (msg) => {
-        console.log(11, msg);
+        console.log(`message to chat is: ${msg}`);
         io.to(roomId).emit('create-message', msg)
       })
 

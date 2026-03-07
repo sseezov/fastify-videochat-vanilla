@@ -31,9 +31,11 @@ export const initControls = (stream) => {
   stream.getAudioTracks()[0].enabled = false;
 
   videoBtn.addEventListener('click', () => {
+    videoBtn.classList.toggle('disabled')
     stream.getVideoTracks()[0].enabled = !stream.getVideoTracks()[0].enabled;
   })
   audioBtn.addEventListener('click', () => {
+    audioBtn.classList.toggle('disabled')
     stream.getAudioTracks()[0].enabled = !stream.getAudioTracks()[0].enabled;
   })
 }
