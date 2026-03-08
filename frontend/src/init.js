@@ -2,7 +2,7 @@ import { io } from "socket.io-client";
 import Peer from 'peerjs'
 import { PEER_CONFIG } from "./config.js";
 import { ROOM_ID } from "./config.js";
-import { initControls, mountVideoStream } from "./helpers/video-helpers.js";
+import { initControls, initShareScreen, mountVideoStream } from "./helpers/video-helpers.js";
 import { connectToNewUser, disonnectUser } from "./services/socket-service.js";
 import { handleCall, handleOpen } from "./services/peer-service.js";
 import { addMessageToChat, initChat } from "./helpers/chat-helpers.js";
@@ -20,10 +20,10 @@ navigator.mediaDevices.getUserMedia({
 }).then((stream) => {
   videoStream = stream;
   mountVideoStream(mountedVideos, stream);
-  initControls(stream);
+  initControls(stream, peers);
+  initShareScreen(peers)
 }).catch(err => {
   console.error('Failed to get media devices:', err);
-  document.body.innerHTML = '<div>Нужен доступ к камере и микрофону</div>';
 });
 
 initChat(socket)

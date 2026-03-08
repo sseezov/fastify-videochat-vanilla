@@ -97,7 +97,7 @@ body {
   gap: 10px;
 }
 
-.chat__message {
+.chat__messages > * {
   background: #3a3a3a;
   padding: 10px;
   border-radius: 5px;
