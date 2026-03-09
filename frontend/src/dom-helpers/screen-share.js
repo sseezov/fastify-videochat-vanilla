@@ -1,73 +1,51 @@
-function stopScreenShare(getLocalStream, peers, isScreenSharing, screenBtn) {
-  const userScreenElement = document.getElementById('123')
-  console.log(12, userScreenElement);
-  if (userScreenElement.srcObject) {
-    console.log(11, userScreenElement);
-    userScreenElement.srcObject.getTracks().forEach(track => track.stop());
-    userScreenElement.srcObject = null;
-  } 
-
-  // Возвращаем обычное видео
-  const videoTrack = getLocalStream().getVideoTracks()[0];
-  Object.values(peers).forEach(call => {
-    const sender = call.peerConnection.getSenders().find(s => s.track?.kind === 'video');
-    if (sender) {
-      sender.replaceTrack(videoTrack);
-    }
-  });
-
-  isScreenSharing = false;
-  screenBtn.textContent = '🖥️ Демонстрация';
-};
-
 export const initShareScreen = (peers, getLocalStream) => {
   const screenBtn = document.getElementById('screen-btn');
+  let sharing = false;
   let screenStream = null;
-  let isScreenSharing = false;
+
+  const stopSharing = () => {
+    if (!screenStream) return;
+    
+    screenStream.getTracks().forEach(track => track.stop());
+    document.getElementById('screen-video')?.remove();
+    
+    const localTrack = getLocalStream().getVideoTracks()[0];
+    Object.values(peers).forEach(call => {
+      const sender = call.peerConnection.getSenders().find(s => s.track?.kind === 'video');
+      if (sender) sender.replaceTrack(localTrack);
+    });
+
+    sharing = false;
+    screenBtn.textContent = '🖥️ Демонстрация';
+    screenStream = null;
+  };
 
   screenBtn.addEventListener('click', async () => {
+    if (sharing) return stopSharing();
+
     try {
-      if (!isScreenSharing) {
-        // Запрашиваем доступ к экрану
-        navigator.mediaDevices.getDisplayMedia({
-          video: true,
-          audio: true
-        }).then((screenStream) => {
-          const userScreenElement = document.createElement('video');
-          userScreenElement.setAttribute('id', '123')
-          userScreenElement.srcObject = screenStream;
-          userScreenElement.autoplay = true;
-          const main = document.querySelector('.main__videos')
-          main.replaceChildren(userScreenElement);
+      screenStream = await navigator.mediaDevices.getDisplayMedia({
+        video: true, audio: true
+      });
 
+      const video = document.createElement('video');
+      video.id = 'screen-video';
+      video.srcObject = screenStream;
+      video.autoplay = true;
+      document.querySelector('.main__videos').replaceChildren(video);
 
-          // Заменяем видеодорожку в peer соединениях
-          const videoTrack = screenStream.getVideoTracks()[0];
+      const videoTrack = screenStream.getVideoTracks()[0];
+      Object.values(peers).forEach(call => {
+        const sender = call.peerConnection.getSenders().find(s => s.track?.kind === 'video');
+        if (sender) sender.replaceTrack(videoTrack);
+      });
 
-          // Меняем трек во всех активных пирах
-          Object.values(peers).forEach(call => {
-            const sender = call.peerConnection.getSenders().find(s => s.track?.kind === 'video');
-            if (sender) {
-              sender.replaceTrack(videoTrack);
-            }
-          });
+      videoTrack.onended = stopSharing;
+      sharing = true;
+      screenBtn.textContent = '🖥️ Остановить';
 
-          // Обработка остановки демонстрации
-          videoTrack.onended = () => {
-            stopScreenShare(getLocalStream, peers, isScreenSharing, screenBtn);
-          };
-
-          isScreenSharing = true;
-          screenBtn.textContent = '🖥️ Остановить';
-
-        }).catch(e => console.log(e))
-          ;
-
-      } else {
-        stopScreenShare(getLocalStream, peers, isScreenSharing, screenBtn);
-      }
-    } catch (err) {
-      console.error('Screen share error:', err);
+    } catch (e) {
+      console.log(e);
     }
   });
-}
+};
