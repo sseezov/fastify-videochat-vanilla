@@ -1,4 +1,4 @@
-import { mountVideoStream } from "../helpers/video-helpers.js";
+import { mountVideoStream } from "../dom-helpers/video.js";
 
 export const handleOpen = (id, getVideoStream, socket, ROOM_ID) => {
   console.log('✅ Peer open with ID:', id);

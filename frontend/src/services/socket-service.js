@@ -1,4 +1,4 @@
-import { mountVideoStream, removeVideo } from "../helpers/video-helpers";
+import { mountVideoStream, removeVideo } from "../dom-helpers/video";
 
 export const connectToNewUser = (peers, peer, userId, videoStream, mountedVideos) => {
   try {

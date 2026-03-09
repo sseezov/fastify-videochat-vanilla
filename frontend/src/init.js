@@ -2,10 +2,11 @@ import { io } from "socket.io-client";
 import Peer from 'peerjs'
 import { PEER_CONFIG } from "./config.js";
 import { ROOM_ID } from "./config.js";
-import { initControls, initShareScreen, mountVideoStream } from "./helpers/video-helpers.js";
+import { initControls, mountVideoStream } from "./dom-helpers/video.js";
 import { connectToNewUser, disonnectUser } from "./services/socket-service.js";
 import { handleCall, handleOpen } from "./services/peer-service.js";
-import { addMessageToChat, initChat } from "./helpers/chat-helpers.js";
+import { addMessageToChat, initChat } from "./dom-helpers/chat.js";
+import { initShareScreen } from "./dom-helpers/screen-share.js";
 
 const peer = new Peer(undefined, PEER_CONFIG);
 const socket = io();
