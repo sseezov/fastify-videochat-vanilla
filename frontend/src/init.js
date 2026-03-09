@@ -22,7 +22,7 @@ navigator.mediaDevices.getUserMedia({
   videoStream = stream;
   mountVideoStream(mountedVideos, stream);
   initControls(stream, peers);
-  initShareScreen(peers)
+  initShareScreen(peers, () => videoStream)
 }).catch(err => {
   console.error('Failed to get media devices:', err);
 });
@@ -39,5 +39,5 @@ peer.on('disconnected', () => {
 
 socket.on('user-connected', (userId) => connectToNewUser(peers, peer, userId, videoStream, mountedVideos));
 socket.on('user-disconnected', (userId) => disonnectUser(peers, mountedVideos, userId));
-socket.on('create-message', (msg)=> addMessageToChat(msg))
+socket.on('create-message', (msg) => addMessageToChat(msg))
 socket.on('connect_error', (err) => console.error('Socket connection error:', err));

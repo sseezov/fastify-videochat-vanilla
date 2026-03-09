@@ -1,11 +1,14 @@
-function stopScreenShare(screenStream) {
-  if (screenStream) {
-    screenStream.getTracks().forEach(track => track.stop());
-    screenStream = null;
-  }
+function stopScreenShare(getLocalStream, peers, isScreenSharing, screenBtn) {
+  const userScreenElement = document.getElementById('123')
+  console.log(12, userScreenElement);
+  if (userScreenElement.srcObject) {
+    console.log(11, userScreenElement);
+    userScreenElement.srcObject.getTracks().forEach(track => track.stop());
+    userScreenElement.srcObject = null;
+  } 
 
   // Возвращаем обычное видео
-  const videoTrack = localStream.getVideoTracks()[0];
+  const videoTrack = getLocalStream().getVideoTracks()[0];
   Object.values(peers).forEach(call => {
     const sender = call.peerConnection.getSenders().find(s => s.track?.kind === 'video');
     if (sender) {
@@ -17,7 +20,7 @@ function stopScreenShare(screenStream) {
   screenBtn.textContent = '🖥️ Демонстрация';
 };
 
-export const initShareScreen = (peers) => {
+export const initShareScreen = (peers, getLocalStream) => {
   const screenBtn = document.getElementById('screen-btn');
   let screenStream = null;
   let isScreenSharing = false;
@@ -31,6 +34,7 @@ export const initShareScreen = (peers) => {
           audio: true
         }).then((screenStream) => {
           const userScreenElement = document.createElement('video');
+          userScreenElement.setAttribute('id', '123')
           userScreenElement.srcObject = screenStream;
           userScreenElement.autoplay = true;
           const main = document.querySelector('.main__videos')
@@ -50,7 +54,7 @@ export const initShareScreen = (peers) => {
 
           // Обработка остановки демонстрации
           videoTrack.onended = () => {
-            stopScreenShare(screenStream);
+            stopScreenShare(getLocalStream, peers, isScreenSharing, screenBtn);
           };
 
           isScreenSharing = true;
@@ -60,7 +64,7 @@ export const initShareScreen = (peers) => {
           ;
 
       } else {
-        stopScreenShare(screenStream);
+        stopScreenShare(getLocalStream, peers, isScreenSharing, screenBtn);
       }
     } catch (err) {
       console.error('Screen share error:', err);
