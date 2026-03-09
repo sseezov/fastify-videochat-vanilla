@@ -7,6 +7,7 @@ import { connectToNewUser, disonnectUser } from "./services/socket-service.js";
 import { handleCall, handleOpen } from "./services/peer-service.js";
 import { addMessageToChat, initChat } from "./dom-helpers/chat.js";
 import { initShareScreen } from "./dom-helpers/screen-share.js";
+import { v4 as uuidv4 } from 'uuid';
 
 const peer = new Peer(undefined, PEER_CONFIG);
 const socket = io();
@@ -14,6 +15,7 @@ const socket = io();
 let videoStream;
 const peers = {};
 const mountedVideos = new Set();
+const userId = uuidv4()
 
 navigator.mediaDevices.getUserMedia({
   video: true,
@@ -22,7 +24,7 @@ navigator.mediaDevices.getUserMedia({
   videoStream = stream;
   mountVideoStream(mountedVideos, stream, userId);
   initControls(stream, peers);
-  initShareScreen(peers, () => videoStream)
+  initShareScreen(peers, () => videoStream, userId)
 }).catch(err => {
   console.error('Failed to get media devices:', err);
 });
