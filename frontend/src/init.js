@@ -20,7 +20,7 @@ navigator.mediaDevices.getUserMedia({
   audio: true
 }).then((stream) => {
   videoStream = stream;
-  mountVideoStream(mountedVideos, stream);
+  mountVideoStream(mountedVideos, stream, userId);
   initControls(stream, peers);
   initShareScreen(peers, () => videoStream)
 }).catch(err => {

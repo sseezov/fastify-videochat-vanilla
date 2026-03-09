@@ -1,3 +1,5 @@
+import { controls } from "../../assets/svg";
+
 export const initShareScreen = (peers, getLocalStream) => {
   const screenBtn = document.getElementById('screen-btn');
   let sharing = false;
@@ -5,10 +7,10 @@ export const initShareScreen = (peers, getLocalStream) => {
 
   const stopSharing = () => {
     if (!screenStream) return;
-    
+
     screenStream.getTracks().forEach(track => track.stop());
     document.getElementById('screen-video')?.remove();
-    
+
     const localTrack = getLocalStream().getVideoTracks()[0];
     Object.values(peers).forEach(call => {
       const sender = call.peerConnection.getSenders().find(s => s.track?.kind === 'video');
@@ -16,7 +18,8 @@ export const initShareScreen = (peers, getLocalStream) => {
     });
 
     sharing = false;
-    screenBtn.textContent = '🖥️ Демонстрация';
+    screenBtn.innerHTML = `${controls.screen} Демонстрация`;
+    screenBtn.classList.remove('disabled')
     screenStream = null;
   };
 
@@ -42,7 +45,7 @@ export const initShareScreen = (peers, getLocalStream) => {
 
       videoTrack.onended = stopSharing;
       sharing = true;
-      screenBtn.textContent = '🖥️ Остановить';
+      screenBtn.classList.add('disabled');
 
     } catch (e) {
       console.log(e);
