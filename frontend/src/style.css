@@ -27,45 +27,11 @@ body {
   overflow-y: auto;
 }
 
-/* Обычный режим (сетка) */
 #video-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
   gap: 20px;
   height: 100%;
-}
-
-/* Режим демонстрации */
-#video-grid.screen-sharing {
-  display: flex;
-  gap: 20px;
-  height: 100%;
-}
-
-/* Видео экрана (большое слева) */
-#video-grid.screen-sharing video[data-user-id="screen"] {
-  flex: 3;
-  height: 100%;
-  max-height: none;
-  object-fit: contain;
-}
-
-/* Контейнер для остальных видео (справа) */
-#video-grid.screen-sharing .remote-videos {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-  overflow-y: auto;
-  max-height: 100%;
-}
-
-/* Видео участников в правой колонке */
-#video-grid.screen-sharing .remote-videos video {
-  width: 100%;
-  height: auto;
-  max-height: 150px;
-  object-fit: cover;
 }
 
 #video-grid video {

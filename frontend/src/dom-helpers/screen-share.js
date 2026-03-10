@@ -1,41 +1,40 @@
 import { controls } from "../../assets/svg";
 
-export const initShareScreen = (peers, getLocalStream) => {
+let sharing = false;
+
+const stopSharing = (screenStream, peers, getLocalStream, userId, screenBtn) => {
+  screenStream.getTracks().forEach(track => track.stop());
+  const videoToReplace = document.querySelector(`video[data-user-id="${userId}"]`);
+  
+  videoToReplace.srcObject = getLocalStream();
+
+  Object.values(peers).forEach(call => {
+    const sender = call.peerConnection.getSenders().find(s => s.track?.kind === 'video');
+    if (sender) sender.replaceTrack(getLocalStream().getVideoTracks()[0]);
+  });
+
+  sharing = false;
+  screenBtn.innerHTML = `${controls.screen} Демонстрация`;
+  screenBtn.classList.remove('disabled')
+  screenStream = null;
+};
+
+export const initShareScreen = (peers, getLocalStream, userId) => {
   const screenBtn = document.getElementById('screen-btn');
-  let sharing = false;
+  const videoBtn = document.querySelector('#video-btn');
+
   let screenStream = null;
-
-  const stopSharing = () => {
-    if (!screenStream) return;
-
-    screenStream.getTracks().forEach(track => track.stop());
-    document.getElementById('screen-video')?.remove();
-
-    const localTrack = getLocalStream().getVideoTracks()[0];
-    Object.values(peers).forEach(call => {
-      const sender = call.peerConnection.getSenders().find(s => s.track?.kind === 'video');
-      if (sender) sender.replaceTrack(localTrack);
-    });
-
-    sharing = false;
-    screenBtn.innerHTML = `${controls.screen} Демонстрация`;
-    screenBtn.classList.remove('disabled')
-    screenStream = null;
-  };
-
   screenBtn.addEventListener('click', async () => {
-    if (sharing) return stopSharing();
-
+    if (sharing) return stopSharing(screenStream, peers, getLocalStream, userId, screenBtn);
     try {
       screenStream = await navigator.mediaDevices.getDisplayMedia({
         video: true, audio: true
       });
 
-      const video = document.createElement('video');
-      video.id = 'screen-video';
-      video.srcObject = screenStream;
-      video.autoplay = true;
-      document.querySelector('.main__videos').replaceChildren(video);
+      const videoToReplace = document.querySelector(`video[data-user-id="${userId}"]`);
+      videoBtn.classList.add('disabled')
+      videoToReplace.srcObject = screenStream;
+      videoToReplace.autoplay = true;
 
       const videoTrack = screenStream.getVideoTracks()[0];
       Object.values(peers).forEach(call => {
