@@ -25,5 +25,5 @@ export const controls = {
           <line x1="8" y1="21" x2="16" y2="21" />
           <line x1="12" y1="17" x2="12" y2="21" />
         </svg>`,
-  leave: `<svg width="20" height="20" viewBox="0 0 20 25" fill="none" xmlns="http://www.w3.org/2000/svg"><g id="SVGRepo_bgCarrier" stroke-width="2"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <path d="M16.5 15V19.5H5.5V5.5H16.5V10M10 12.5H22.5" stroke="#ffffff" stroke-width="2"></path> <path d="M20 10L22.5 12.5L20 15" stroke="#ffffff" stroke-width="2"></path> </g></svg>`
+  leave: `<svg width="20" height="20" viewBox="0 0 20 25" fill="none" xmlns="http://www.w3.org/2000/svg"><g id="SVGRepo_bgCarrier" stroke-width="2"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <path d="M16.5 15V19.5H5.5V5.5H16.5V10M10 12.5H22.5" stroke="#ffffff" stroke-width="2"></path> <path d="M20 10L22.5 12.5L20 15" stroke="#ffffff" stroke-width="2"></path> </g></svg>`,
 }

@@ -13,3 +13,9 @@ build-deploy:
 start-server:
 	node backend/src/server.js
 
+lint:
+	npx eslint .
+
+lint-fix:
+	npx eslint . --fix
+

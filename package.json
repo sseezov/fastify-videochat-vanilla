@@ -1,0 +1,27 @@
+{
+  "name": "nodejs-videochat-app",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "type": "module",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/sseezov/fastify-videochat-vanilla.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/sseezov/fastify-videochat-vanilla/issues"
+  },
+  "homepage": "https://github.com/sseezov/fastify-videochat-vanilla#readme",
+  "devDependencies": {
+    "@eslint/js": "^10.0.1",
+    "globals": "^17.4.0",
+    "@stylistic/eslint-plugin": "^5.10.0",
+    "eslint": "^10.0.3"
+  }
+}

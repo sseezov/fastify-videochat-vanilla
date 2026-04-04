@@ -1,10 +1,14 @@
-import { defineConfig } from 'vite';
+import { defineConfig } from 'vite'
 
 export default defineConfig({
   server: {
     proxy: {
       '/socket.io': 'http://localhost:3000', // прокси для сокетов
-      '/peerjs': 'http://localhost:9000'      // прокси для peerjs
+      '/peerjs': 'http://localhost:9000', // прокси для peerjs
     },
   },
-});
+  esbuild: {
+    jsxFactory: 'h',
+    jsxInject: `import { h } from '/h.js'`,
+  },
+})

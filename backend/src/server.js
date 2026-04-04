@@ -1,11 +1,11 @@
 import Fastify from 'fastify'
 import path from 'node:path'
-import { v4 as uuidv4 } from 'uuid';
-import { Server } from 'socket.io';
-import fastifyStatic from '@fastify/static';
-import { PeerServer } from 'peer';
+import { v4 as uuidv4 } from 'uuid'
+import { Server } from 'socket.io'
+import fastifyStatic from '@fastify/static'
+import { PeerServer } from 'peer'
 
-const __dirname = import.meta.dirname;
+const __dirname = import.meta.dirname
 
 const fastify = Fastify({
   // logger: true
@@ -13,52 +13,50 @@ const fastify = Fastify({
 
 fastify.register(fastifyStatic, {
   root: path.join(__dirname, '../public'),
-});
+})
 
 fastify.get('/', (request, reply) => {
   reply.redirect(`/${uuidv4()}`)
-});
+})
 
 fastify.get('/:room', (request, reply) => {
-  reply.sendFile('index.html');
-});
+  reply.sendFile('index.html')
+})
 
 const peerServer = PeerServer({
   port: 9000,
   path: '/peerjs',
-  allow_discovery: true
+  allow_discovery: true,
 })
 
 try {
   await fastify.listen({
     port: 3000,
-    host: '0.0.0.0'
-  });
+    host: '0.0.0.0',
+  })
 
-  const io = new Server(fastify.server);
-  console.log(`server is listening on http://localhost:3000`);
+  const io = new Server(fastify.server)
+  console.log(`server is listening on http://localhost:3000`)
   console.log('PeerJS: http://localhost:9000/peerjs')
 
   io.on('connection', (socket) => {
     socket.on('join-room', (roomId, userId) => {
-
-      console.log(`Пользователь ${socket.id} присоединился к комнате ${roomId}`);
+      console.log(`Пользователь ${socket.id} присоединился к комнате ${roomId}`)
       socket.join(roomId)
       socket.to(roomId).emit('user-connected', userId)
 
       socket.on('message', (msg) => {
-        console.log(`message to chat is: ${msg}`);
+        console.log(`message to chat is: ${msg}`)
         io.to(roomId).emit('create-message', msg)
       })
 
       socket.on('disconnect', () => {
-        socket.to(roomId).emit('user-disconnected', userId);
-      });
+        socket.to(roomId).emit('user-disconnected', userId)
+      })
     })
-
-  });
-
-} catch (err) {
+  })
+}
+catch (err) {
   fastify.log.error(err)
   process.exit(1)
 }
