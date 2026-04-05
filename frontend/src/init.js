@@ -9,6 +9,7 @@ import { addMessageToChat, initChat } from './dom-helpers/chat.js'
 import { initShareScreen } from './dom-helpers/screen-share.js'
 import { v4 as uuidv4 } from 'uuid'
 import App from './App.jsx'
+import { initEvents } from './core/events.js'
 
 const peer = new Peer(undefined, PEER_CONFIG)
 const socket = io()
@@ -34,6 +35,7 @@ navigator.mediaDevices.getUserMedia({
 })
 
 initChat(socket)
+initEvents()
 
 peer.on('open', id => handleOpen(id, () => videoStream, socket, ROOM_ID))
 peer.on('call', call => handleCall(call, () => videoStream, peers, mountedVideos))

@@ -1,6 +1,6 @@
 export const initChat = (socket) => {
   const input = document.querySelector('#chat-input')
-  const form = document.querySelector('.chat__input')
+  const form = document.querySelector('#chat-form')
 
   form.addEventListener('submit', (e) => {
     e.preventDefault()

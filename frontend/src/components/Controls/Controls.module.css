@@ -1,0 +1,45 @@
+.controls {
+  grid-area: controls;
+  background: #2a2a2a;
+  padding: 15px 20px;
+  display: flex;
+  gap: 10px;
+  border-top: 1px solid #3a3a3a;
+}
+
+.btn {
+  padding: 10px 20px;
+  border: none;
+  border-radius: 5px;
+  background: #3a3a3a;
+  color: white;
+  cursor: pointer;
+  font-size: 14px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  position: relative;
+}
+
+.btn:hover {
+  background: #4a4a4a;
+}
+
+.danger {
+  background: #c0392b;
+}
+
+.danger:hover {
+  background: #e74c3c;
+}
+
+.disabled::after {
+  content: '';
+  position: absolute;
+  left: 15%;
+  top: 50%;
+  width: 30px;
+  height: 3px;
+  background: #e74c3c;
+  transform: rotate(-45deg) translateY(-50%);
+}
